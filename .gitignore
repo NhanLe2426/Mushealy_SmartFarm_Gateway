@@ -1,0 +1,16 @@
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables (Never push database passwords to GitHub)
+.env
+
+# VS Code / IDE settings
+.vscode/
+.idea/

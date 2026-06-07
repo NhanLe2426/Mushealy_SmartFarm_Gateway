@@ -3,6 +3,7 @@ import mysql.connector
 from mysql.connector import Error as MySQLError
 import config
 from datetime import datetime
+import requests
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -62,6 +63,42 @@ def receive_telemetry():
 
     # Return a success response to CoreIoT
     return jsonify({"status": "success", "message": "Telemetry processed"}), 200
+
+# ---------------------------------------------------------
+# Control Endpoint for Custom Web/App
+# ---------------------------------------------------------
+@app.route('/api/control', methods=['POST'])
+def control_device_from_web():
+    req_data = request.json
+    if not req_data or "device" not in req_data or "status" not in req_data:
+        return jsonify({"error": "Invalid request format"}), 400
+
+    target_device = req_data["device"]
+    target_status = req_data["status"] 
+
+    rpc_method = "setPumpStatus" if target_device == "pump" else "setLightStatus"
+
+    try:
+        # Send a Telemetry packet containing an RPC activation command to Rule Engine.
+        url = f"{config.COREIOT_URL}/api/v1/{config.COREIOT_TOKEN}/telemetry"
+        payload = {
+            "_trigger_rpc": True,       # Flags for Rule Engine to recognize
+            "method": rpc_method,       # RPC function name
+            "params": target_status     # True/False state
+        }
+        
+        res = requests.post(url, json=payload)
+        
+        if res.status_code == 200:
+            print(f"[Gateway] Sent RPC trigger to Rule Engine: {rpc_method} -> {target_status}")
+            return jsonify({"status": "success", "message": "Command forwarded via Rule Engine"}), 200
+        else:
+            print(f"[Gateway] Failed to trigger RPC: {res.text}")
+            return jsonify({"error": "Failed to trigger RPC"}), 500
+
+    except Exception as e:
+        print(f"[Gateway] Error communicating with CoreIoT: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     print("=" * 50)

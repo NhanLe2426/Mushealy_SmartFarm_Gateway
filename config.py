@@ -15,6 +15,12 @@ DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = os.getenv("DB_NAME", "railway")
 
 # ---------------------------------------------------------
+# CoreIoT Device API Configuration
+# ---------------------------------------------------------
+COREIOT_URL = "https://app.coreiot.io"
+COREIOT_TOKEN = "1omr8yulbsmbyugm9yof"
+
+# ---------------------------------------------------------
 # Device ID Mapping
 # ---------------------------------------------------------
 # Map incoming JSON keys from CoreIoT to the internal device_id in your MySQL database

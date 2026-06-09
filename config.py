@@ -5,20 +5,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ---------------------------------------------------------
-# Database Configuration
+# PostgreSQL Configuration (Neon DB on Vercel)
 # ---------------------------------------------------------
-# It is highly recommended to use environment variables in production (Railway)
-DB_HOST = os.getenv("DB_HOST", "") 
-DB_PORT = int(os.getenv("DB_PORT", "3306"))
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-DB_NAME = os.getenv("DB_NAME", "railway")
+# Using the pooled connection string for better performance
+POSTGRES_URL = os.getenv("POSTGRES_URL", "postgresql://user:pass@host/db")
 
 # ---------------------------------------------------------
 # CoreIoT Device API Configuration
 # ---------------------------------------------------------
 COREIOT_URL = "https://app.coreiot.io"
-COREIOT_TOKEN = "1omr8yulbsmbyugm9yof"
+COREIOT_TOKEN = "1omr8yulbsmbyugm9yof"          # Token from the ESP32 node
 
 # ---------------------------------------------------------
 # Device ID Mapping

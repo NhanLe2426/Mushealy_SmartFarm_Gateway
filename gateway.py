@@ -21,17 +21,17 @@ def get_db_connection():
         return None
 
 def save_sensor_data(device_id, value):
-    # Insert telemetry data into the database
+    # Insert telemetry data into the real PostgreSQL database schema
     conn = get_db_connection()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            # psycopg2 natively supports %s syntax for parameterized queries
-            sql = "INSERT INTO sensor_data (device_id, value, created_at) VALUES (%s, %s, %s)"
-            val = (device_id, value, datetime.now())
+            # Updated columns to match your real schema: sensor_data_id, recorded_at, synced
+            sql = "INSERT INTO sensor_data (device_id, value, recorded_at, synced) VALUES (%s, %s, %s, %s)"
+            val = (device_id, value, datetime.now(), True)
             cursor.execute(sql, val)
             conn.commit()
-            print(f"[DB] Successfully inserted: Device {device_id} -> {value}")
+            print(f"[DB] Successfully inserted into real schema: Device {device_id} -> {value}")
             cursor.close()
         except PostgresError as e:
             print(f"[DB] Insert error: {e}")
